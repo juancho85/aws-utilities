@@ -66,8 +66,11 @@ done
 ################################################
 
 awscli() {
-    print_message "Installing AWS prerequisites"
+    print_message "Installing AWS prerequisites and other useful libraries"
     apk add git && \
+    apk add tar && \
+    apk add pigz && \
+    apk add coreutils && \
     apk add nano && \
     apk add bash && \
     apk add python && \
@@ -119,7 +122,7 @@ download() {
 extract() {
     for i in $SOURCE_DIRS; do
         print_message "Extracting ${i}.tar.gz"
-        tar xvfz ${i}.tar.gz
+        pigz -dc ${i}.tar.gz | tar xf -
         print_message "Finished with ${i}.tar.gz"
     done
 }
