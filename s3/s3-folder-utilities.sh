@@ -68,7 +68,7 @@ done
 ################################################
 
 upload() {
-    for i in $(find $SOURCE_DIRS -type d); do
+    for i in $(find $SOURCE_DIRS  -maxdepth 0 -type d); do
          print_message "Uploading ${i}"
          if [ -n "$AWS_PROFILE" ]; then
             tar -cP ${i} | gzip -9 | aws s3 cp - s3://${BUCKET}/${TARGET_BASE_DIR}/${i}.tar.gz --profile $AWS_PROFILE
