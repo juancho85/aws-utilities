@@ -70,8 +70,12 @@ done
 upload() {
     for i in $(find $SOURCE_DIRS -type d); do
          print_message "Uploading ${i}"
-         tar -cP ${i} | gzip -9 | aws s3 cp - s3://${BUCKET}/${TARGET_BASE_DIR}/${i}.tar.gz --profile $AWS_PROFILE
-         print_message "Finished with ${i}"
+         if [ -n "$AWS_PROFILE" ]; then
+            tar -cP ${i} | gzip -9 | aws s3 cp - s3://${BUCKET}/${TARGET_BASE_DIR}/${i}.tar.gz --profile $AWS_PROFILE
+        else
+            tar -cP ${i} | gzip -9 | aws s3 cp - s3://${BUCKET}/${TARGET_BASE_DIR}/${i}.tar.gz
+        fi
+        print_message "Finished with ${i}"
     done
 }
 
@@ -82,7 +86,12 @@ upload() {
 download() {
     for i in $SOURCE_DIRS; do
         print_message "Downloading ${i}.tar.gz"
-        aws s3 cp s3://${BUCKET}/${TARGET_BASE_DIR}/${i}.tar.gz ${i}.tar.gz --profile $AWS_PROFILE
+        if [ -n "$AWS_PROFILE" ]; then
+            aws s3 cp s3://${BUCKET}/${TARGET_BASE_DIR}/${i}.tar.gz ${i}.tar.gz --profile $AWS_PROFILE
+        else
+            aws s3 cp s3://${BUCKET}/${TARGET_BASE_DIR}/${i}.tar.gz ${i}.tar.gz
+        fi
+
         print_message "Finished with ${i}.tar.gz"
     done
 }
