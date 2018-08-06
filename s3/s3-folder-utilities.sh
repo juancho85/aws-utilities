@@ -61,6 +61,22 @@ do
     fi
 done
 
+################################################
+# Install AWS prerequisites
+################################################
+
+awscli() {
+    print_message "Installing AWS prerequisites"
+    apk add git && \
+    apk add nano && \
+    apk add bash && \
+    apk add python && \
+    apk add py-pip && \
+    pip install --upgrade pip && \
+    pip install awscli --upgrade --user && \
+    export PATH=~/.local/bin:$PATH
+    print_message "Done Installing AWS prerequisites"
+}
 
 
 ################################################
@@ -69,8 +85,8 @@ done
 
 upload() {
     for i in $(find $SOURCE_DIRS  -maxdepth 0 -type d); do
-         print_message "Uploading ${i}"
-         if [ -n "$AWS_PROFILE" ]; then
+        print_message "Uploading ${i}"
+        if [ -n "$AWS_PROFILE" ]; then
             tar -cP ${i} | gzip -9 | aws s3 cp - s3://${BUCKET}/${TARGET_BASE_DIR}/${i}.tar.gz --profile $AWS_PROFILE
         else
             tar -cP ${i} | gzip -9 | aws s3 cp - s3://${BUCKET}/${TARGET_BASE_DIR}/${i}.tar.gz
@@ -136,6 +152,3 @@ if [ ! -z "${ENV_FILE}" ]; then
         eval $FUNCTION
     fi
 fi
-
-
-
