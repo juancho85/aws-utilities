@@ -1,0 +1,2 @@
+arn:aws:sns:us-east-1:XXXXXXX:YYYYYY
+arn:aws:sns:us-east-1:XXXXXXX:ZZZZZZ
